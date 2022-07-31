@@ -1,3 +1,3 @@
-export const test = () => {
-  console.log('Hello World 12');
-};
+import AsciiEffect from './AsciiEffect';
+
+export default AsciiEffect;

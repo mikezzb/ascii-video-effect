@@ -13,7 +13,9 @@
     "test:watch": "jest --watch",
     "test": "jest --coverage",
     "typecheck": "tsc --noEmit",
-    "dev": "tsc-watch --onSuccess \"yarn example-update\""
+    "dev": "tsc-watch --onSuccess \"yarn example-update\"",
+    "example-start": "cd example && yarn start",
+    "install-all": "yarn install && yarn build && cd example && yarn install"
   },
   "repository": "https://github.com/mikezzb/typescript-template.git",
   "author": "mikezzb <mikezhoudev@gmail.com>",
