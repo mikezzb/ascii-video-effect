@@ -14,25 +14,36 @@ export default class AsciiEffect {
   private ready: boolean;
   private size: Size | undefined;
   constructor(input: HTMLVideoElement, config?: AEConfig) {
+    console.log('Constructed');
     this.input = input;
     this.config = config || {};
     this.canvas = this.config.output || document.createElement('canvas');
-    this.ready = false;
-    this.input.oncanplay = () => {
-      console.log('ready');
-      this.ready = true;
-      this.size = {
-        width: this.input.width,
-        height: this.input.height,
-      };
+    this.ready = true;
+    this.size = {
+      width: this.input.width,
+      height: this.input.height,
     };
-    console.log('Constructed');
+    this.resize(this.size);
     this.animate = this.animate.bind(this);
+    this.resize = this.resize.bind(this);
+    this.input.onresize = this.resize;
     requestAnimationFrame(this.animate);
   }
-  animate() {
+  private animate() {
     requestAnimationFrame(this.animate);
     if (this.ready) this.render();
   }
-  render() {}
+  private render() {}
+  resize(targetSize?: Size | UIEvent) {
+    if (targetSize instanceof UIEvent) {
+      targetSize = undefined;
+    }
+    const { width, height } = targetSize || this.input;
+    this.size = {
+      width,
+      height,
+    };
+    this.canvas.width = width;
+    this.canvas.height = height;
+  }
 }

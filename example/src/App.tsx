@@ -17,13 +17,13 @@ function App() {
         <Webcam
           audio={false}
           height={SIZE.height}
-          ref={ref => {
-            (webcamRef as any).current = ref;
+          ref={webcamRef}
+          width={SIZE.width}
+          onCanPlay={() => {
             effectRef.current = new AsciiEffect(
               webcamRef?.current?.video as HTMLVideoElement
             )
           }}
-          width={SIZE.width}
         />
       </div>
     </div>
