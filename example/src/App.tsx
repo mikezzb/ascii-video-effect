@@ -1,14 +1,31 @@
 import AsciiEffect from "my-package";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import Webcam from "react-webcam";
 import './App.scss';
+
+const SIZE = {
+  width: 480,
+  height: 640,
+}
 
 function App() {
   const effectRef = useRef<AsciiEffect>();
-  useEffect(() => {
-    effectRef.current = new AsciiEffect(12);
-  }, []);
+  const webcamRef = useRef<Webcam>(null);
   return (
     <div className="App">
+      <div className="effect-container">
+        <Webcam
+          audio={false}
+          height={SIZE.height}
+          ref={ref => {
+            (webcamRef as any).current = ref;
+            effectRef.current = new AsciiEffect(
+              webcamRef?.current?.video as HTMLVideoElement
+            )
+          }}
+          width={SIZE.width}
+        />
+      </div>
     </div>
   );
 }
