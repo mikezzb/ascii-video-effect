@@ -1,11 +1,12 @@
 {
-  "name": "typescript-template",
+  "name": "ascii-video-effect",
   "version": "1.0.0",
   "main": "./lib/src/index.js",
   "scripts": {
-    "build": "tsc",
+    "bootstrap": "yarn && yarn build && cd example && yarn",
+    "build": "tsc && yarn example upgrade ascii-video-effect",
+    "example": "yarn --cwd example",
     "rebuild": "yarn clean && tsc",
-    "example-update": "cd example && yarn update-pkg",
     "clean": "rm -rf ./lib/",
     "lint": "eslint ./src/ --fix",
     "prepare": "husky install",
@@ -13,11 +14,10 @@
     "test:watch": "jest --watch",
     "test": "jest --coverage",
     "typecheck": "tsc --noEmit",
-    "dev": "tsc-watch --onSuccess \"yarn example-update\"",
-    "example-start": "cd example && yarn start",
-    "install-all": "yarn install && yarn build && cd example && yarn install"
+    "dev": "tsc-watch --onSuccess \"yarn build\"",
+    "clear": "yarn clean && rm -rf node_modules && cd example && rm -rf node_modules"
   },
-  "repository": "https://github.com/mikezzb/typescript-template.git",
+  "repository": "https://github.com/mikezzb/ascii-video-effect.git",
   "author": "mikezzb <mikezhoudev@gmail.com>",
   "license": "MIT",
   "lint-staged": {
