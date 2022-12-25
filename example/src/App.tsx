@@ -24,6 +24,7 @@ function App() {
       SIZE.width,
       SIZE.height
     );
+    effect.start();
     effectRef.current = effect;
     if (textRef.current) {
       const styles = effect.getAsciiContainerStyles();

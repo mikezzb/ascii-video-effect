@@ -13,14 +13,15 @@ export default class AsciiEffect {
   private callback: OnResultAvailable;
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
-  private ready: boolean;
   private size: Size;
-  private solver: AsciiSolver;
+  private solver?: AsciiSolver;
+  private shades?: string[];
+  private aniReq: number | null = null;
   constructor(
     input: HTMLVideoElement,
     callback: OnResultAvailable,
-    width?: number,
-    height?: number,
+    width = 0,
+    height = 0,
     shades?: string[],
     canvas?: HTMLCanvasElement
   ) {
@@ -30,32 +31,48 @@ export default class AsciiEffect {
     this.context = this.canvas.getContext('2d', {
       willReadFrequently: true,
     }) as CanvasRenderingContext2D;
-    this.ready = true;
     this.size = {
-      width: width || this.input.width,
-      height: height || this.input.height,
+      width,
+      height,
     };
-    this.solver = new AsciiSolver(
-      this.context,
-      this.size.width,
-      this.size.height,
-      shades
-    );
-    this.resize(this.size);
+    this.shades = shades;
     this.animate = this.animate.bind(this);
     this.resize = this.resize.bind(this);
     this.input.onresize = this.resize;
-    requestAnimationFrame(this.animate);
   }
   private animate() {
     requestAnimationFrame(this.animate);
-    if (this.ready) this.render();
+    this.render();
   }
   private render() {
+    if (!this.solver) return;
     const { width, height } = this.size;
     this.context.drawImage(this.input, 0, 0, width, height);
     const asciiStr = this.solver.solve();
     this.callback(asciiStr);
+  }
+  init() {
+    this.size.width ||= this.input.videoWidth;
+    this.size.height ||= this.input.videoHeight;
+    this.resize(this.size);
+    if (!this.solver) {
+      this.solver = new AsciiSolver(
+        this.context,
+        this.size.width,
+        this.size.height,
+        this.shades
+      );
+    }
+  }
+  start() {
+    if (!this.solver) this.init();
+    this.aniReq = requestAnimationFrame(this.animate);
+  }
+  stop() {
+    if (this.aniReq != null) {
+      cancelAnimationFrame(this.aniReq);
+      this.aniReq = null;
+    }
   }
   getAsciiContainerStyles() {
     const { width, height } = this.size;
